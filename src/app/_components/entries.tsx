@@ -21,13 +21,15 @@ function getUserInfo() {
 export function Entries() {
     const { username, password } = getUserInfo();
 
-    const userData = api.user.login({ username, password });
+    const loginRes = api.user.login.useQuery({ username, password });
 
-    if (!userData.success) {
+
+    if (!loginRes?.data?.success) {
         redirect('/login');
     }
 
-    const userEntries = api.user.getUserdata({ username, password });
+    const userEntryQuery = api.user.getUserdata.useQuery({ username, password });
+
 
     return (
         <div>
