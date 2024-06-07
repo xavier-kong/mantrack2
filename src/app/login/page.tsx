@@ -16,6 +16,7 @@ import {
 } from "~/components/ui/form"
 import { Input } from "~/components/ui/input"
 import { toast } from "~/components/ui/use-toast"
+import { api } from "~/trpc/react";
 
 const FormSchema = z.object({
     username: z.string().min(2, {
@@ -23,7 +24,7 @@ const FormSchema = z.object({
     }),
 })
 
-function InputForm() {
+export default function Login() {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -43,35 +44,42 @@ function InputForm() {
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Username</FormLabel>
-                            <FormControl>
-                                <Input placeholder="shadcn" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button type="submit">Submit</Button>
-            </form>
-        </Form>
-    )
-}
-
-export default async function Login() {
-    return (
         <div className="h-screen w-full flex-1 flex-row flex items-center justify-center">
             <div>
-                <InputForm />
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <>
+                                    <FormItem>
+                                        <FormLabel>Username</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="shadcn" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            This is your public display name.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="shadcn" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            This is your public display name.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                </>
+                            )}
+                        />
+                        <Button type="submit">Submit</Button>
+                    </form>
+                </Form>
+
             </div>
         </div>
     )
