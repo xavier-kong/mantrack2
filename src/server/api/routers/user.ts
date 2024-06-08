@@ -34,7 +34,7 @@ export const userRouter = createTRPCRouter({
     }),
     login: publicProcedure
     .input(z.object({ username: z.string(), password: z.string() }))
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
         await validateUserCreds({ ...input });
         return { success: true };
     }),
