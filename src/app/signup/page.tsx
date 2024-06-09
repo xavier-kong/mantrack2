@@ -1,7 +1,8 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -29,8 +30,8 @@ const FormSchema = z.object({
     })
 })
 
-export default function Login() {
-    const loginMutation = api.user.login.useMutation()
+export default function Signup() {
+    const loginMutation = api.user.createUser.useMutation();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -40,6 +41,19 @@ export default function Login() {
         },
     })
 
+    useEffect(() => {
+        if (loginMutation.isSuccess) {
+            const body = {
+                username: loginMutation.data.username,
+                password: loginMutation.data.password
+            }
+
+            window.localStorage.setItem("user", JSON.stringify(body))
+
+            redirect('/main')
+        }
+    }, [loginMutation])
+
     if (loginMutation.isPending) {
         return(
             <div className="h-screen w-full flex-1 flex-row flex items-center justify-center">
@@ -48,12 +62,8 @@ export default function Login() {
         );
     }
 
-    if (loginMutation.error?.data) {
-        toast({ title: 'login error lol' });
-    }
-
     return (
-        <div className="h-screen w-full flex-1 flex-col flex items-center justify-center">
+        <div className="h-screen w-full flex-1 flex-col flex items-center justify-center bg-slate-950">
             <div className="">
                 <Form {...form}>
                     <form 
@@ -90,11 +100,6 @@ export default function Login() {
                         <Button type="submit">Submit</Button>
                     </form>
                 </Form>
-                <div className="w-full my-5 flex-row items-center justify-start flex">
-                    <Link href="/signup">
-                        <p>Create new user</p>
-                    </Link>
-                </div>
             </div>
         </div>
     )

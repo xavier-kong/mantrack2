@@ -23,6 +23,8 @@ export const userRouter = createTRPCRouter({
             await db.insert(users).values(input);
 
             return {
+                username: input.username,
+                password: input.password,
                 success: true
             };
         } catch (error) {
